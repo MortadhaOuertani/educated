@@ -20,6 +20,7 @@ import tn.tekup.educated.scolarite.domain.PedagogicalStatus;
 import tn.tekup.educated.scolarite.domain.Student;
 import tn.tekup.educated.shared.web.BusinessRuleException;
 import tn.tekup.educated.shared.web.NotFoundException;
+import tn.tekup.educated.shared.tenant.TenantContext;
 
 @Service
 @Transactional
@@ -60,7 +61,7 @@ public class EnrollmentService {
         enrollment.setStatus(EnrollmentStatus.ENROLLED);
         enrollment.getAssignments().add(assignment(enrollment, schoolClassId, date, repeating));
         enrollment = enrollments.save(enrollment);
-        events.publishEvent(new StudentEnrolled(enrollment.getEstablishmentId(), studentId, enrollment.getId(),
+        events.publishEvent(new StudentEnrolled(TenantContext.requireEstablishment(), studentId, enrollment.getId(),
                 schoolClass.academicYearId(), schoolClassId));
         return enrollment;
     }

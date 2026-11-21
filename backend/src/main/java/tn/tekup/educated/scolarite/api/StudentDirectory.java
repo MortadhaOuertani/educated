@@ -43,6 +43,13 @@ public class StudentDirectory {
                 .map(assignment -> assignment.getSchoolClassId());
     }
 
+    public Optional<EnrollmentInfo> currentEnrollment(UUID studentId) {
+        return assignments.findOpenForStudent(studentId).stream().findFirst()
+                .map(a -> new EnrollmentInfo(a.getEnrollment().getId(), studentId,
+                        a.getEnrollment().getAcademicYearId(), a.getEnrollment().getStudyLevelId(),
+                        a.getSchoolClassId()));
+    }
+
     private static StudentInfo toInfo(Student s) {
         return new StudentInfo(s.getId(), s.getMatricule(), s.getPerson() == null ? null : s.getPerson().fullName());
     }

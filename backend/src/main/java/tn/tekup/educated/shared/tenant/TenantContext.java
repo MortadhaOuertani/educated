@@ -34,6 +34,11 @@ public final class TenantContext {
         return value == null || ROOT.equals(value) || NONE.equals(value) ? Optional.empty() : Optional.of(value);
     }
 
+    /** The current establishment, for stamping domain events. Fails when no real establishment is set. */
+    public static UUID requireEstablishment() {
+        return currentEstablishment().orElseThrow(() -> new IllegalStateException("No establishment is set."));
+    }
+
     public static void set(UUID establishmentId) {
         CURRENT.set(establishmentId);
     }

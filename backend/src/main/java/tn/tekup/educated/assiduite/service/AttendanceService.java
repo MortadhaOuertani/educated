@@ -33,6 +33,7 @@ import tn.tekup.educated.emploidutemps.api.SessionInfo;
 import tn.tekup.educated.scolarite.api.StudentDirectory;
 import tn.tekup.educated.shared.web.BusinessRuleException;
 import tn.tekup.educated.shared.web.NotFoundException;
+import tn.tekup.educated.shared.tenant.TenantContext;
 
 /**
  * Appels (attendance calls). The teacher marks each student present, absent or late, then confirms; changes are
@@ -155,7 +156,7 @@ public class AttendanceService {
                 late.add(record.getStudentId());
             }
         }
-        events.publishEvent(new AbsencesRecorded(sheet.getEstablishmentId(), sessionId, session.schoolClassId(),
+        events.publishEvent(new AbsencesRecorded(TenantContext.requireEstablishment(), sessionId, session.schoolClassId(),
                 session.teachingAssignmentId(), session.date(), absent, late));
         return sheet;
     }

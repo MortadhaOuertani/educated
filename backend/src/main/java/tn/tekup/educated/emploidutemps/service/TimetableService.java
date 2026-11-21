@@ -36,6 +36,7 @@ import tn.tekup.educated.pedagogie.api.TeachingDirectory;
 import tn.tekup.educated.shared.domain.SessionType;
 import tn.tekup.educated.shared.web.BusinessRuleException;
 import tn.tekup.educated.shared.web.NotFoundException;
+import tn.tekup.educated.shared.tenant.TenantContext;
 
 /**
  * Weekly timetables of the classes. Publishing a timetable creates the dated sessions of the period
@@ -252,7 +253,7 @@ public class TimetableService {
             sessions.findById(event.originalOccurrenceId()).ifPresent(session::setMakeUpOf);
         }
         session = sessions.save(session);
-        events.publishEvent(new SessionScheduled(session.getEstablishmentId(), session.getId(),
+        events.publishEvent(new SessionScheduled(TenantContext.requireEstablishment(), session.getId(),
                 session.getSchoolClassId(), session.getTeachingAssignmentId(), session.getSessionDate(),
                 session.getStartTime(), true));
     }

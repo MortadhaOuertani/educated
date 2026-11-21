@@ -15,6 +15,7 @@ import tn.tekup.educated.scolarite.domain.StudentStatus;
 import tn.tekup.educated.shared.audit.AuditLogger;
 import tn.tekup.educated.shared.security.CurrentUserProvider;
 import tn.tekup.educated.shared.web.BusinessRuleException;
+import tn.tekup.educated.shared.tenant.TenantContext;
 
 @Service
 @Transactional
@@ -55,7 +56,7 @@ public class SanctionService {
             student.setStatus(StudentStatus.EXCLUDED);
         }
         audit.record("scolarite", "SANCTION_ISSUED", "Sanction", sanction.getId(), null);
-        events.publishEvent(new SanctionIssued(sanction.getEstablishmentId(), sanction.getId(), studentId,
+        events.publishEvent(new SanctionIssued(TenantContext.requireEstablishment(), sanction.getId(), studentId,
                 notifyGuardians));
         return sanction;
     }

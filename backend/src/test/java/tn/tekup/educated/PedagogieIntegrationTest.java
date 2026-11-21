@@ -147,6 +147,9 @@ class PedagogieIntegrationTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON).content("{\"status\": \"CONFIRMED\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("CONFIRMED"));
+        mvc.perform(get("/api/teacher/sessions?from=2026-11-28&to=2026-11-28").with(as("teacher.demo")))
+                .andExpect(jsonPath("$[0].makeUp").value(true))
+                .andExpect(jsonPath("$[0].startTime").value("10:00:00"));
         mvc.perform(patch("/api/pedagogie/make-up-requests/" + requestId).with(as("superadmin"))
                         .contentType(MediaType.APPLICATION_JSON).content("{\"status\": \"REJECTED\"}"))
                 .andExpect(status().isUnprocessableContent())
