@@ -7,3 +7,4 @@ export * from './lib/problem';
 export * from './lib/provide-educated';
 export * from './lib/session.service';
 export * from './lib/labels';
+export * from './lib/dates';

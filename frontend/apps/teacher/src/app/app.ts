@@ -21,6 +21,13 @@ import { NavItem, ShellComponent } from '@edu/ui';
 })
 export class App {
   private readonly session = inject(SessionService);
-  protected readonly navItems: NavItem[] = [{ label: 'Accueil', link: '/' }];
+  protected readonly navItems: NavItem[] = [
+    { label: 'Accueil', link: '/' },
+    { label: 'Mes séances', link: '/seances' },
+    { label: 'Mes classes', link: '/classes' },
+    { label: 'Notes et surveillances', link: '/notes' },
+    { label: 'Stages encadrés', link: '/stages' },
+    { label: 'Notifications', link: '/notifications' },
+  ];
   protected readonly isTeacher = computed(() => this.session.me()?.personType === 'TEACHER');
 }

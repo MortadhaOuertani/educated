@@ -24,8 +24,14 @@ export class App {
 
   protected readonly navItems: NavItem[] = [
     { label: 'Accueil', link: '/' },
+    { label: 'Emploi du temps', link: '/emploi-du-temps' },
+    { label: 'Mes cours', link: '/cours' },
+    { label: 'Mes absences', link: '/absences' },
+    { label: 'Examens et notes', link: '/notes' },
+    { label: 'Mon stage', link: '/stage' },
     { label: 'Demandes de documents', link: '/demandes' },
     { label: 'Paiements', link: '/paiements' },
+    { label: 'Notifications', link: '/notifications' },
     { label: 'Mon profil', link: '/profil' },
   ];
 

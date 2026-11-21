@@ -300,3 +300,19 @@ table.data th {
 .badge-danger {
   color: var(--edu-danger);
 }
+
+/* Unread notifications */
+table.data tr.unread td:first-child {
+  border-left: 3px solid var(--edu-info);
+}
+
+/* Week view of the timetable */
+.week-day {
+  margin-bottom: 1rem;
+}
+
+.week-day h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  text-transform: capitalize;
+}

@@ -83,6 +83,8 @@ class PedagogieIntegrationTest extends IntegrationTest {
         mvc.perform(get("/api/teacher/profile").with(as("teacher.demo")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.employeeNumber").value("DEMO-T-001"));
+        mvc.perform(get("/api/teacher/periods").with(as("teacher.demo")))
+                .andExpect(jsonPath("$[0].code").value("S1"));
         String assignments = body(mvc.perform(get("/api/teacher/assignments").with(as("teacher.demo")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].subjectCode", hasItem("GL-ARCHI"))));

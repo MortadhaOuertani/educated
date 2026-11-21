@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import tn.tekup.educated.parametrage.api.AcademicPeriodInfo;
+import tn.tekup.educated.parametrage.api.ParametrageDirectory;
 import tn.tekup.educated.pedagogie.domain.MaterialType;
 import tn.tekup.educated.pedagogie.domain.TeachingAssignment;
 import tn.tekup.educated.pedagogie.service.CourseService;
@@ -46,14 +48,23 @@ class TeacherPortalController {
     private final CourseService courses;
     private final MakeUpService makeUps;
     private final FileStorage fileStorage;
+    private final ParametrageDirectory parametrage;
 
     TeacherPortalController(CurrentUserProvider currentUserProvider, TeachingService teaching, CourseService courses,
-            MakeUpService makeUps, FileStorage fileStorage) {
+            MakeUpService makeUps, FileStorage fileStorage, ParametrageDirectory parametrage) {
         this.currentUserProvider = currentUserProvider;
         this.teaching = teaching;
         this.courses = courses;
         this.makeUps = makeUps;
         this.fileStorage = fileStorage;
+        this.parametrage = parametrage;
+    }
+
+    /** Semesters of the current academic year (grades are entered per semester). */
+    @GetMapping("/periods")
+    List<AcademicPeriodInfo> periods() {
+        teacherId();
+        return parametrage.currentAcademicYear().map(year -> parametrage.periodsOf(year.id())).orElse(List.of());
     }
 
     @GetMapping("/profile")
