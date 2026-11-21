@@ -5,6 +5,7 @@ import { Operation, SessionService } from '@edu/core';
 import { buildNav, requirePermission } from './access';
 import { App } from './app';
 import { nextStatuses } from './pages/document-requests.page';
+import { remainingAmount } from './pages/finances.page';
 
 /** What the "Scolarité" system role gets from the backend. */
 const scolariteRights: Record<string, Operation[]> = {
@@ -30,7 +31,7 @@ describe('back-office', () => {
   it('shows only the screens the role allows', () => {
     const session = fakeSession(false, scolariteRights);
     const labels = buildNav(session.can).map((item) => item.label);
-    expect(labels).toEqual(['Tableau de bord', 'Apprenants', 'Demandes de documents']);
+    expect(labels).toEqual(['Tableau de bord', 'Apprenants', 'Demandes de documents', 'Notifications']);
   });
 
   it('shows the administration screens to a Super Admin', () => {
@@ -62,5 +63,18 @@ describe('back-office', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain("Aucun accès à l'espace de gestion");
+  });
+
+  it('shows a module screen only to roles allowed to read it', () => {
+    const financeOnly = fakeSession(false, { Installment: ['READ'] });
+    const labels = buildNav(financeOnly.can).map((item) => item.label);
+    expect(labels).toContain('Finances');
+    expect(labels).not.toContain('Examens et notes');
+    expect(labels).not.toContain('Apprenants');
+  });
+
+  it('computes what is left to pay on an installment in millimes', () => {
+    expect(remainingAmount({ amount: 630, paidAmount: 370.5 })).toBe(259.5);
+    expect(remainingAmount({ amount: 0.3, paidAmount: 0.1 })).toBe(0.2);
   });
 });

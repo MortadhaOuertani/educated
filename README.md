@@ -79,21 +79,44 @@ rules and the main workflows over real HTTP calls with simulated Keycloak tokens
   Other modules only use what it exposes in its `api` package. `ModularityTest` fails if a module reaches into
   another module's internals or if module dependencies form a cycle.
 - Links between modules are stored as `UUID` ids, never as database foreign keys across schemas.
+- Modules react to each other through domain events (for example `StudentEnrolled` creates the fee plan,
+  `MakeUpConfirmed` schedules the make-up session, and most events become notifications). Listeners run after the
+  publishing transaction commits, in their own transaction.
 - Every business table carries `establishment_id`. Hibernate fills it and filters on it automatically, so one
   establishment never sees another's data.
 - Keycloak only signs users in. What a user may do is decided by the backend's roles (module visibility, default
-  policy, per-entity rights, menus, denied actions) and checked on every endpoint with `@PreAuthorize`.
+  policy, per-entity rights, menus, denied actions) and checked on every endpoint with `@PreAuthorize`. Portal
+  endpoints (`/api/student/...`, `/api/teacher/...`, `/api/me/...`) only ever return the signed-in person's data.
 - Nobody can change their own roles, and giving admin rights needs the approval of a second Super Admin.
+
+## Modules
+
+| Module | What it does |
+|---|---|
+| `parametrage` | Establishments, academic years and semesters, levels, classes, rooms, feature switches |
+| `administration` | Accounts, roles (6-layer model), role change approvals, preferences |
+| `scolarite` | Learners, guardians, enrollments, sanctions, document requests |
+| `pedagogie` | Subjects, study plans, teachers, assignments, course materials, course journal, homework, make-up requests |
+| `emploidutemps` | Weekly timetables with clash checks, dated sessions, make-up sessions, cancellations |
+| `assiduite` | Calls (editable 48 h after confirming), absence rates per subject, justification requests, teacher hours |
+| `stages` | Internship declaration and approval, defense requests, juries, defenses, grades and mentions |
+| `examens` | Exam calendar with room and invigilator checks, grade grids, publication, report cards and ranks |
+| `finances` | Fees per level, fee plans split into installments, payments with receipts, reminders, teacher payments |
+| `vieetablissement` | Surveys (anonymous answers keep no author), canteen menus and reservations, infirmary, entry tickets, access control |
+| `communication` | Notifications from the other modules' events, messages to an audience or a class, news, discussions |
+
+The demo data (`educated.bootstrap.demo-data`, on by default) creates one class, one student (`student.demo`), one
+teacher (`teacher.demo`) who teaches two subjects of that class, and a published first-semester timetable.
 
 ## Status
 
-Built and tested: shared kernel, `parametrage`, `administration`, `scolarite`, and the three portals (student:
-profile, document requests, payments switch; back-office: learners, guardians, enrollments, document requests,
-roles, users; teacher: home).
+Every module above is built, with its back-office screens and the matching student and teacher portal screens.
+Tests: 37 backend tests (on embedded PostgreSQL) and 38 frontend tests.
 
-Also built and tested (backend only): `pedagogie` (subjects, study plans, teachers, assignments, course materials,
-journal, homework, make-up requests), `emploidutemps` (timetables with clash checks, dated sessions, make-up
-sessions) and `assiduite` (calls, absence rates, justification requests, teacher hours).
+Not done yet:
 
-The tables of `stages`, `examens`, `finances`, `vieetablissement` and `communication` exist (migrations V8 to V12);
-their services, endpoints and the portal screens of the new modules are still to do.
+- Push, SMS and e-mail sending: notifications are stored and shown in the apps, but no message leaves the server.
+- Report card PDFs, the attention points of the dashboard, and skipping public holidays when a timetable creates
+  its sessions.
+- Answers to anonymous surveys cannot be limited to one per person, because nothing links an answer to its author.
+- The whole stack has not been run end to end in a browser yet: that needs Docker for PostgreSQL and Keycloak.

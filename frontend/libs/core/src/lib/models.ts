@@ -116,6 +116,16 @@ export interface AcademicYear {
   endDate: string;
   status: 'PLANNED' | 'OPEN' | 'CLOSED';
   current: boolean;
+  periods?: AcademicPeriod[];
+}
+
+export interface AcademicPeriod {
+  id: string;
+  code: string;
+  name: LocalizedText;
+  orderIndex: number;
+  startDate: string;
+  endDate: string;
 }
 
 export interface SchoolClass {

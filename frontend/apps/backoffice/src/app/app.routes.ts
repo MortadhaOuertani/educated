@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { NotificationsPage } from '@edu/ui';
 import { requirePermission } from './access';
 
 export const appRoutes: Route[] = [
@@ -37,5 +38,54 @@ export const appRoutes: Route[] = [
     loadComponent: () => import('./pages/users.page').then((m) => m.UsersPage),
     title: 'Utilisateurs',
   },
+  {
+    path: 'assiduite',
+    canActivate: [requirePermission('StudentAbsenceRequest', 'READ')],
+    loadComponent: () => import('./pages/attendance.page').then((m) => m.AttendancePage),
+    title: 'Assiduité',
+  },
+  {
+    path: 'pedagogie',
+    canActivate: [requirePermission('Teacher', 'READ')],
+    loadComponent: () => import('./pages/teaching.page').then((m) => m.TeachingPage),
+    title: 'Pédagogie',
+  },
+  {
+    path: 'emplois-du-temps',
+    canActivate: [requirePermission('Timetable', 'READ')],
+    loadComponent: () => import('./pages/timetables.page').then((m) => m.TimetablesPage),
+    title: 'Emplois du temps',
+  },
+  {
+    path: 'examens',
+    canActivate: [requirePermission('GradeGrid', 'READ')],
+    loadComponent: () => import('./pages/exams.page').then((m) => m.ExamsPage),
+    title: 'Examens et notes',
+  },
+  {
+    path: 'stages',
+    canActivate: [requirePermission('Internship', 'READ')],
+    loadComponent: () => import('./pages/internships.page').then((m) => m.InternshipsPage),
+    title: 'Stages',
+  },
+  {
+    path: 'finances',
+    canActivate: [requirePermission('Installment', 'READ')],
+    loadComponent: () => import('./pages/finances.page').then((m) => m.FinancesPage),
+    title: 'Finances',
+  },
+  {
+    path: 'communication',
+    canActivate: [requirePermission('Message', 'READ')],
+    loadComponent: () => import('./pages/communication.page').then((m) => m.CommunicationPage),
+    title: 'Communication',
+  },
+  {
+    path: 'vie-etablissement',
+    canActivate: [requirePermission('CanteenMenu', 'READ')],
+    loadComponent: () => import('./pages/campus.page').then((m) => m.CampusPage),
+    title: "Vie de l'établissement",
+  },
+  { path: 'notifications', component: NotificationsPage, title: 'Notifications' },
   { path: '**', redirectTo: '' },
 ];
