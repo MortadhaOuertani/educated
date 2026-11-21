@@ -27,7 +27,7 @@ public class SystemRoles {
 
     private static final List<String> SCOLARITE_MANAGED = List.of("Student", "Guardian", "StudentGuardian", "Kinship",
             "SiblingRelation", "Enrollment", "ClassAssignment", "Sanction", "DocumentRequest", "PreRegistrationRequest",
-            "StudentCard", "AttendanceSheet", "AttendanceRecord", "StudentAbsenceRequest");
+            "StudentCard", "AttendanceSheet", "AttendanceRecord", "StudentAbsenceRequest", "Message");
     private static final List<String> SCOLARITE_READ_ONLY = List.of("DocumentType", "AcademicYear", "AcademicPeriod",
             "StudyLevel", "SchoolClass", "Program", "Cycle", "Specialization", "SessionOccurrence", "Timetable",
             "AttendancePolicy");
