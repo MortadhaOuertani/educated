@@ -1,0 +1,5 @@
+package tn.tekup.educated.stages.domain;
+
+public enum InternshipStatus {
+    PENDING_APPROVAL, APPROVED, REFUSED, DEFENSE_REQUESTED, AUTHORIZED_BY_SUPERVISOR, AUTHORIZED_TO_DEFEND, DEFENDED, VALIDATED
+}

@@ -1,0 +1,14 @@
+{
+  "identities": [
+    {
+      "name": "educated-backend",
+      "credentials": [
+        {
+          "accessKey": "educated",
+          "secretKey": "Dev-8dToOVK8zftcD7!"
+        }
+      ],
+      "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+    }
+  ]
+}

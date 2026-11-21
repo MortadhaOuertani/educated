@@ -1,0 +1,82 @@
+spring:
+  application:
+    name: educated-backend
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/educated}
+    username: ${DB_USER:educated}
+    password: ${DB_PASSWORD:educated_dev}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+      naming:
+        # Prefix embedded columns with their path (name_fr, person_first_name, address_city...).
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+    properties:
+      hibernate:
+        tenant_identifier_resolver: tn.tekup.educated.shared.tenant.TenantIdentifierResolver
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER:http://localhost:8081/realms/educated}
+          audiences: educated-api
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: 5672
+    username: educated
+    password: ${RABBITMQ_PASSWORD:educated_dev}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
+  cache:
+    type: ${CACHE_TYPE:simple}
+  jackson:
+    deserialization:
+      # A missing true/false field in a request means false (Jackson 3 rejects it by default).
+      fail-on-null-for-primitives: false
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 55MB
+  modulith:
+    events:
+      jdbc:
+        schema-initialization:
+          enabled: true
+      republish-outstanding-events-on-restart: true
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,modulith
+  endpoint:
+    health:
+      show-details: when-authorized
+
+educated:
+  cors:
+    allowed-origins:
+      - http://localhost:4200
+      - http://localhost:4201
+      - http://localhost:4202
+  storage:
+    endpoint: ${S3_ENDPOINT:http://localhost:8333}
+    region: us-east-1
+    access-key: ${S3_ACCESS_KEY:educated}
+    secret-key: ${S3_SECRET_KEY:Dev-8dToOVK8zftcD7!}
+    bucket: educated
+  bootstrap:
+    establishment-code: TEKUP
+    establishment-name: TEK-UP University
+    super-admin-username: ${SUPER_ADMIN_USERNAME:superadmin}
+    demo-data: ${DEMO_DATA:true}
